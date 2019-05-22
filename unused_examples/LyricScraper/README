@@ -1,0 +1,15 @@
+In order to run the scrapemaster.py. 
+The user must pass three variables to the script.
+
+The first variable is "artistlink".
+This variable accepts the link to the artist's song page on Azlyrics.com. For example, "https:/www.azlyrics.com/r/rollingstones.html"
+
+The second variable is called "linkend"
+This variable accepts the ending of the url above that references the name of the artists. For example, "rollingstones" (with html removed)
+
+The third variable is called "artistname"
+This variable is used to tag each lyric with the name of the artist. For example, "The Rolling Stones"
+
+The script is set to append to a JSON file. If you already created a JSON file with the scraped data. Running the script again would append to existing JSON.
+
+

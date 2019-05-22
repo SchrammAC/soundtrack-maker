@@ -1,0 +1,8 @@
+Errors: Escape during artist 2 (Elvis Presley), song 469
+
+Transfer to new dataset: elton-john, led-zeppelin, garth-brooks, eminem, queen, acdc, the-rolling-stones, eagles, billy-joel, u2
+Transfered:              elton-john, led-zeppelin, garth-brooks, eminem, queen, acdc, the-rolling-stones, eagles, billy-joel, u2
+
+Deleted "chris young 94 bars"
+
+
