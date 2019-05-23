@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
-
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 
 from joblib import dump, load
@@ -129,7 +129,7 @@ category_id_df = lyric_df[['genre', 'category_id']].sort_values('category_id')
 category_to_id = dict(category_id_df.values)
 labels = lyric_df.category_id
 
-N = 4
+N = 10
 for genre, category_id in sorted(category_to_id.items()):
   features_chi2 = chi2(features, labels == category_id)
   indices = np.argsort(features_chi2[0])
@@ -156,7 +156,7 @@ print(clf.predict_proba(count_vect.transform([test_str])))
 dump(clf, 'models/genre-class.joblib')
 
 unique_artist = song_info.artist.unique()
-art_list = []; rockpred = []; hiphoppred=[]; countrypred = [];realgenre = [];
+art_list = []; rockpred = []; hiphoppred=[]; countrypred = [];realgenre = [];pred_t=[]
 for artist in unique_artist: #get predictions for all artists
     raw_art_lyrics = song_info.loc[song_info.artist == artist].loc[:,'lyrics']
     genre = song_info.loc[song_info.artist == artist].genre.iloc[0]
@@ -164,13 +164,15 @@ for artist in unique_artist: #get predictions for all artists
     art_text = " ".join(word for word in clean_art)
     [c,h,r] = clf.predict_proba(count_vect.transform([art_text]))[0]
     art_list.append(artist); rockpred.append(r), countrypred.append(c); hiphoppred.append(h); realgenre.append(genre)
-    
+    pred_t.append(clf.predict(count_vect.transform([art_text]))[0])
 pred_data = {'artist':art_list, 'genre':realgenre, 'rock':rockpred, 'hiphop':hiphoppred, 'country':countrypred}
 pred_data = pd.DataFrame.from_dict(pred_data)
+print("Artist accuracy:")
+print(accuracy_score(realgenre,pred_t))
 
 pred_data.to_csv('classifications/artist_genre_class.csv', index=False, header=True)
 
-art_list = []; song_list = []; rockpred = []; hiphoppred=[]; countrypred = [];realgenre = [];
+art_list = []; song_list = []; rockpred = []; hiphoppred=[]; countrypred = [];realgenre = [];pred_t=[]
 for song in song_info.lyrics: #get predictions for all artists
     genre = song_info.loc[song_info.lyrics == song].genre.iloc[0]
     artist = song_info.loc[song_info.lyrics == song].artist.iloc[0]
@@ -179,10 +181,12 @@ for song in song_info.lyrics: #get predictions for all artists
 #    song_text = " ".join(word for word in clean_song)
     [c,h,r] = clf.predict_proba(count_vect.transform([song]))[0]
     art_list.append(artist); song_list.append(song_name), rockpred.append(r), countrypred.append(c); hiphoppred.append(h); realgenre.append(genre)
-    
+    pred_t.append(clf.predict(count_vect.transform([song]))[0])
+
 pred_data = {'artist':art_list, 'song':song_list, 'genre':realgenre, 'rock':rockpred, 'hiphop':hiphoppred, 'country':countrypred}
 pred_data = pd.DataFrame.from_dict(pred_data)
-
+print("Song accuracy:")
+print(accuracy_score(realgenre,pred_t))
 pred_data.to_csv('classifications/song_genre_class.csv', index=False, header=True)
 
 
